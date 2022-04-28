@@ -1,0 +1,7 @@
+Metoda bezpośrednia rozwiązała układ równań w czasie 0.416 [s].
+Metody iteracyjne nie zbiegają się, brak rozwiązań.
+Tzn. 
+Macierz A nie jest symetryczna, dodatnio określona.
+Macierz A nie jest diagonalnie dominująca.
+Promień spektralny macierzy D^(−1)(L + U) nie jest mniejszy niż 1.
+A nie jest diagonalnie dominująca.

@@ -1,0 +1,28 @@
+clc
+clear all
+close all
+eps = 1e-3;
+start = 1;
+finish = 60000;
+
+l = start;
+r = finish;
+timearr = zeros(finish,1);
+
+for i = l:r 
+    timearr(i) = t(i);
+end
+
+figure;
+plot(1:60000, timearr );
+ylabel("t[s]");
+xlabel("N");
+title("Wykres czasu"); 
+
+result = bisection(@t,l,r, eps,eps);
+format longG
+disp(result);
+
+function time = t(N)
+    time = (N.^(1.43) + N.^(1.14))./1000 - 5000;
+end

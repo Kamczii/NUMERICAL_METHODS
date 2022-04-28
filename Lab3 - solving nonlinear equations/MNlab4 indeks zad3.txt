@@ -1,0 +1,5 @@
+Przy 6 znajduje miejsce zerowe w przedziale 
+Zero found in the interval [5.66059, 6.33941]
+
+W przedziale [4.24544, 4.75456]  znajduje się asymptota pionowa, po jednej stronie funkcja zbiega ku
+większym wartościom, po drugiej ku mniejszym stąd następuje nieprawidłowość.
