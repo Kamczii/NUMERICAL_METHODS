@@ -1,6 +1,8 @@
 import math
 import time
 
+import matplotlib.pyplot as plt
+
 RESIDUUM = 10 ** -9
 ITERATION_LIMIT = 500
 
@@ -56,49 +58,13 @@ def convergence_reached(epsilon: [int], residuum):
     return max(epsilon) < residuum
 
 
-def jacobi(A, b):
-    n = len(b)  # dimension of matrix
-    x = [1] * n  # vector of results
-    epsilon = [math.inf] * n  # approximations
-    k = 0  # iterations
-    while not convergence_reached(epsilon, RESIDUUM):
-        x_prev = x.copy()
-        for i, row in enumerate(A):  # dla każdego wiersza
-            summation = 0
-            for j, a in enumerate(row):
-                if j != i:
-                    summation += a * x_prev[j]
-            x[i] = (b[i] - summation) / A[i][i]
-            epsilon[i] = abs((x[i] - x_prev[i]) / x[i])
-        k += 1
-        if k > ITERATION_LIMIT:
-            print("Metoda Jacobiego nie zbiega się osiągnięto limit iteracji!")
-            return [], math.inf
-    check(A, b, x)
-    return x, k
+def create_identity_matrix(n):
+    return create_matrix(n, 1, 0, 0)
 
 
-def gauss_seidel(A, b):
-    n = len(b)
-    x = [1] * n
-    epsilon = [math.inf] * n
-    k = 0
-    while not convergence_reached(epsilon, RESIDUUM):
-        x_prev = x.copy()
-        for i, (row, bv) in enumerate(zip(A, b)):
-            summation = 0
-            for j, a in enumerate(row[:i]):
-                summation += a * x[j]
-            for j, a in enumerate(row[i + 1:], start=i + 1):
-                summation += a * x_prev[j]
-            x[i] = (bv - summation) / A[i][i]
-            epsilon[i] = abs((x[i] - x_prev[i]) / x[i])
-        k += 1
-        if k > ITERATION_LIMIT:
-            print("Metoda Gaussa-Seidla nie zbiega się osiągnięto limit iteracji!")
-            return [], math.inf
-    check(A, b, x)
-    return x, k
+def swap_rows(matrix: [[]], row1: int, row2: int):
+    matrix[row1], matrix[row2] = matrix[row2], matrix[row1]
+    return
 
 
 def check(A, b, x):
@@ -145,8 +111,49 @@ def lower(matrix):
     return L
 
 
-def create_identity_matrix(n):
-    return create_matrix(n, 1, 0, 0)
+def jacobi(A, b):
+    n = len(b)  # dimension of matrix
+    x = [1] * n  # vector of results
+    epsilon = [math.inf] * n  # approximations
+    k = 0  # iterations
+    while not convergence_reached(epsilon, RESIDUUM):
+        x_prev = x.copy()
+        for i, row in enumerate(A):  # dla każdego wiersza
+            summation = 0
+            for j, a in enumerate(row):
+                if j != i:
+                    summation += a * x_prev[j]
+            x[i] = (b[i] - summation) / A[i][i]
+            epsilon[i] = abs((x[i] - x_prev[i]) / x[i])
+        k += 1
+        if k > ITERATION_LIMIT:
+            print("Metoda Jacobiego nie zbiega się osiągnięto limit iteracji!")
+            return [], math.inf
+    check(A, b, x)
+    return x, k
+
+
+def gauss_seidel(A, b):
+    n = len(b)
+    x = [1] * n
+    epsilon = [math.inf] * n
+    k = 0
+    while not convergence_reached(epsilon, RESIDUUM):
+        x_prev = x.copy()
+        for i, (row, bv) in enumerate(zip(A, b)):
+            summation = 0
+            for j, a in enumerate(row[:i]):
+                summation += a * x[j]
+            for j, a in enumerate(row[i + 1:], start=i + 1):
+                summation += a * x_prev[j]
+            x[i] = (bv - summation) / A[i][i]
+            epsilon[i] = abs((x[i] - x_prev[i]) / x[i])
+        k += 1
+        if k > ITERATION_LIMIT:
+            print("Metoda Gaussa-Seidla nie zbiega się osiągnięto limit iteracji!")
+            return [], math.inf
+    check(A, b, x)
+    return x, k
 
 
 def lu_factorization(matrix):
@@ -159,11 +166,6 @@ def lu_factorization(matrix):
             L[j][i] = l
             U[j] = [a1 - l * a2 for (a1, a2) in zip(U[j], U[i])]
     return L, U
-
-
-def swap_rows(matrix: [[]], row1: int, row2: int):
-    matrix[row1], matrix[row2] = matrix[row2], matrix[row1]
-    return
 
 
 def plu_factorization(matrix):
@@ -217,50 +219,81 @@ def lu(A, b):
     return x
 
 
-def zad1_2():
+def task1_2():
     A, b = init_a()
-    # print_matrix(A)
     start = time.perf_counter()
     x, k = jacobi(A, b)
     end = time.perf_counter()
-    print(f"Jacobi {k} iteracji w czasie {end - start}, wyniki: {x}")
+    print(f"Zad2. Jacobi {k} iteracji w czasie {end - start}, wyniki: {x}")
 
     start = time.perf_counter()
     x, k = gauss_seidel(A, b)
     end = time.perf_counter()
-    print(f"Gauss-Seidel {k} iteracji w czasie {end - start}, wyniki: {x}")
+    print(f"Zad2. Gauss-Seidel {k} iteracji w czasie {end - start}, wyniki: {x}")
     return
 
 
-def zad3():
+def task3():
     A, b = init_b()
-
-    # print_matrix(A)
     start = time.perf_counter()
     x, k = jacobi(A, b)
     end = time.perf_counter()
-    print(f"Jacobi {k} iteracji w czasie {end - start}s, wyniki: {x}")
+    print(f"Zad3. Jacobi {k} iteracji w czasie {end - start}s, wyniki: {x}")
 
     start = time.perf_counter()
     x, k = gauss_seidel(A, b)
     end = time.perf_counter()
-    print(f"Gauss-Seidel {k} iteracji w czasie {end - start}s, wyniki: {x}")
+    print(f"Zad3. Gauss-Seidel {k} iteracji w czasie {end - start}s, wyniki: {x}")
     return
 
 
-def zad4():
+def task4():
     A, b = init_b()
     start = time.perf_counter()
     x = lu(A, b)
     end = time.perf_counter()
     diff = highest_diff(A, b, x)
-    print(f"Faktoryzacja LU zajęła {end - start}s, norma z residuum wynosi {diff}, wyniki: {x} ")
+    print(f"Zad4. Faktoryzacja LU zajęła {end - start}s, norma z residuum wynosi {diff}, wyniki: {x} ")
     return
 
 
+def task5():
+    N = [100, 500, 1000, 2000]
+
+    jacobi_method = []
+    gauss_seidel_method = []
+    lu_factorization_method = []
+
+    for n in N:
+        A, b = init_a(n)
+        start = time.perf_counter()
+        jacobi(A, b)
+        end = time.perf_counter()
+        jacobi_method.append(end - start)
+
+        start = time.perf_counter()
+        gauss_seidel(A, b)
+        end = time.perf_counter()
+        gauss_seidel_method.append(end - start)
+
+        start = time.perf_counter()
+        lu(A, b)
+        end = time.perf_counter()
+        lu_factorization_method.append(end - start)
+
+    plt.title("Wykres czasu działania metod iteracyjnych")
+    plt.xlabel("Liczba niewiadomych")
+    plt.ylabel("Czas działania [sek]")
+    plt.plot(N, jacobi_method, label='Jacobi')
+    plt.plot(N, gauss_seidel_method, label='Gauss-Seidel')
+    plt.plot(N, lu_factorization_method, label='Faktoryzacja LU')
+    plt.legend()
+    plt.show()
+    plt.savefig('wykres.png')
 
 
 if __name__ == '__main__':
-    zad1_2()
-    zad3()
-    zad4()
+    task1_2()
+    task3()
+    task4()
+    task5()
