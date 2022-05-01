@@ -258,7 +258,7 @@ def task4():
 
 
 def task5():
-    N = [100, 500, 1000, 2000]
+    N = [100, 500, 1000, 2200]
 
     jacobi_method = []
     gauss_seidel_method = []
@@ -281,15 +281,15 @@ def task5():
         end = time.perf_counter()
         lu_factorization_method.append(end - start)
 
-    plt.title("Wykres czasu działania metod iteracyjnych")
+    plt.title("Wykres czasu działania rozwiązywania równań liniowych")
     plt.xlabel("Liczba niewiadomych")
     plt.ylabel("Czas działania [sek]")
     plt.plot(N, jacobi_method, label='Jacobi')
     plt.plot(N, gauss_seidel_method, label='Gauss-Seidel')
     plt.plot(N, lu_factorization_method, label='Faktoryzacja LU')
     plt.legend()
-    plt.show()
     plt.savefig('wykres.png')
+    plt.show()
 
 
 if __name__ == '__main__':
