@@ -1,0 +1,1 @@
+Wykresy są bardzo podobne z większymi odstępami na krawędziach. Tam wartości na granicy wykresu są niedokładne i zbiegają ku dołowi dla interpolacji wielomianowej.

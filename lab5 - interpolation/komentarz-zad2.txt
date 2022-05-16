@@ -1,0 +1,1 @@
+Dla interpolacji trygonometrycznej różnice w aproksymacji są znacznie mniejsze wraz ze wzrostem kolejnych próbek. Dla interpolacji wielomianowej następuje błędna aproksymacja w pewnym momencie czego skutkiem są duże różnice od wartości rzeczywistych. 

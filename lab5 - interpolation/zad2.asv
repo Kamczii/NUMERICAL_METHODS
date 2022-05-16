@@ -1,0 +1,46 @@
+clear all;
+close all;
+
+NR = 5:45;
+Div_p = zeros(length(NR));
+Div_t = zeros(length(NR));
+for k = NR
+    [XX,YY]=meshgrid(linspace(0,100,101),linspace(0,100,101));
+    [x,y,f, xp, xy] = lazik(k);
+
+    [p]=polyfit2d(x,y,f);
+    [FF_p]=polyval2d(XX,YY,p);
+
+    [p]=trygfit2d(x,y,f);
+    [FF_t]=trygval2d(XX,YY,p);
+    
+    if k == 5
+        FF_p_prev = FF_p;
+        FF_t_prev = FF_t;
+    else
+        Div_p[k-5] = max(abs(FF_p-FF_p_prev))
+    Div(k) = max(abs(FF(k) - FF(k-1)));
+    end
+end
+figure;
+plot(NR,Div)
+title("Zbieżność interpolacji wielomianowej")
+ylabel("Maksymalna różnica")
+xlabel("Ilość punktów pomiarowych")
+saveas(gcf,'zbieznosc_interpolacji_wielomanowej.png');
+
+Div = zeros(length(NR));
+for k = len(NR)
+    [x,y,f, xp, xy] = lazik(k);
+
+    [p]=trygfit2d(x,y,f);
+    [FF]=trygval2d(XX,YY,p);
+
+    Div(k) = max(abs(FF(k) - FF(k-1)));
+end
+figure;
+plot(NR,Div)
+title("Zbieżność interpolacji trygonometrycznej")
+ylabel("Maksymalna różnica")
+xlabel("Ilość punktów pomiarowych")
+saveas(gcf,'zbieznosc_interpolacji_trygonometrycznej.png');
