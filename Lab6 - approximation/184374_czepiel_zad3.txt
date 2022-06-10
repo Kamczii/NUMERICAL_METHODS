@@ -1,0 +1,1 @@
+Z racji tego, że położenie drona może być obarczone błędem 5% należy w tym przypadku skorzystać z aproksymacji. Funkcja interpolująca przechodzi przez wszystkie próbki, dlatego jeśli obarczone są one błędem możemy otrzymać wyniki odbiegające znacznie od rzeczywistych. W takim przypadku lepiej wykorzystać funkcję aproksymującą, która pozwoli nam określić ogólny trend funkcji. 

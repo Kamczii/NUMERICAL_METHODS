@@ -1,0 +1,3 @@
+Najszybsza okazała się metoda prostokątów, co jest mogliśmy przewidzieć gdyż przy tej metodzie obliczenia są najprostsze (Obliczamy wartość funkcji tylko dla środka przedziału).
+Najdłuższa wykonuje się metoda Simpsona, dla której dla każdego przedziału obliczamy wartość funkcji aż trzykrotnie co czyni to obliczenie najbardziej skomplikowanym.
+Choć metoda monte carlo daje wątpliwe przybliżenie całkowanej funkcji możemy być pewni, że wykona się ona szybciej jeśli zaakceptujemy tę losowość.
