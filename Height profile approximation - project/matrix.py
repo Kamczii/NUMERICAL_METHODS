@@ -1,6 +1,7 @@
 import copy
 import math
 
+
 RESIDUUM = 10 ** -9
 ITERATION_LIMIT = 500
 
@@ -77,7 +78,7 @@ def check(A, b, x):
     for i in range(N):
         sum = 0
         for j in range(N):
-            sum += A[i][j] * x[j]
+            sum += A[i][j] * x[j][0]
         diff = abs(sum - b[i][0])
         if diff > RESIDUUM:
             raise ValueError(f"Błąd! Rozwiązanie nie spełnia układu równań! Różnica: {diff} dla x{i}")
@@ -88,16 +89,13 @@ def multiply(A, B):
     A_columns = len(A[0])
     B_rows = len(B)
     B_columns = (len(B[0]))
-    assert  A_columns == B_rows
+    assert A_columns == B_rows
 
     C = [[0 for _ in range(B_columns)] for _ in range(A_rows)]
 
     for i in range(A_rows):
         for j in range(B_columns):
-            sum = 0
-            for k in range(B_rows):
-                sum += A[i][k]*B[k][j]
-            C[i][j] = sum
+            C[i][j] = sum([A[i][k] * B[k][j] for k in range(B_rows)])
     return C
 
 
@@ -131,25 +129,15 @@ def lu_pivoting(matrix, b):
             for i in range(k, size):
                 U[j][i] -= factor * U[k][i]
 
-    print_matrix(L)
-
     b = multiply(P, b)
     y = [0 for _ in range(size)]
     # Forward substitution Ly = b
     for row in range(size):
-        s = 0
-        for col in range(0, row):
-            s += L[row][col] * y[col]
+        s = sum([L[row][col] * y[col] for col in range(0, row)])
         y[row] = b[row][0] - s
 
     x = [0 for _ in range(size)]
     for row in range(size - 1, -1, -1):  # Ux = y
-        s = 0
-        for col in range(size - 1, -1, -1):
-            s += U[row][col] * x[col]
+        s = sum([U[row][col] * x[col] for col in range(size - 1, -1, -1)])
         x[row] = (y[row] - s) / U[row][row]
     return x
-
-
-def solve(A, b):
-    return lu_pivoting(A, b)
