@@ -1,8 +1,8 @@
 from matplotlib import pyplot as plt
 from pandas import DataFrame
 
-from constants import LAGRANGE
-from matrix import create_matrix, insert_equations, lu_pivoting, check
+from constants import LAGRANGE, HEIGHT
+from matrix import create_matrix, insert_equations, lu_pivoting, check, print_matrix
 
 
 def interpolate(xsmpl: [float], ysmpl: [float], n: int, method=LAGRANGE):
@@ -20,10 +20,9 @@ def separate_data(df: DataFrame, n: int, equal=True):
         indexes = linspace(0, size, n)
         return df.iloc[indexes]
     else:
-        return df.sample(n)
+        return df.sample(n).sort_index()
 
-
-def lagrange_interpolation(xsmpl: [float], ysmpl: [float], xv: [float]) -> float:
+def lagrange_interpolation(xsmpl: [float], ysmpl: [float], xv: float) -> float:
     m = len(xsmpl)
     n = m - 1
     y = 0
@@ -45,7 +44,7 @@ def spline_interpolation(xsmpl: [float], ysmpl: [float], n):
     x = []
     y = []
     intervals = len(xsmpl) - 1
-    m = int(n/intervals)
+    m = int(n / intervals)
     for i in range(0, len(xsmpl) - 2, 2):
         ax, ay = spline(xsmpl[i:i + 3], ysmpl[i:i + 3], m)
         x += ax

@@ -1,5 +1,6 @@
 import re
 
+import mplcyberpunk
 import pandas as pd
 from matplotlib import pyplot as plt
 
@@ -15,41 +16,46 @@ class TestMethodsObject:
         self.index = 1
         self.show = show
 
-    def test_method(self, interpolation_method=LAGRANGE, interpoated_points=500):
+    def test_method(self, samples, equal_space=True, interpolation_method=LAGRANGE, interpoated_points=500):
         for file in self.FILES:
             df = pd.read_csv(f'2018_paths/{file}.csv')
             x_org = df[DISTANCE]
             y_org = df[HEIGHT]
-            for smpl in self.SAMPLES:
-                sample = separate_data(df, smpl, True)
+            for smpl in samples:
+                sample = separate_data(df, smpl, equal_space)
                 x_samples = list(sample[DISTANCE])
                 y_samples = list(sample[HEIGHT])
 
                 interpolated_x, interpolated_y = interpolate(x_samples, y_samples, interpoated_points, interpolation_method)
 
-                description, title = self.get_plot_title_and_description(interpolation_method, file, smpl)
+                description, title = self.get_plot_title_and_description(interpolation_method, file, smpl, equal_space)
 
                 plot = self.plot(x_org, y_org, x_samples, y_samples, interpolated_x, interpolated_y, title,
                                  description)
-
-                plot.show() if self.show else plot.savefig(f"charts/{interpolation_method}/{file}-{smpl}-samples.png")
-
+                random = "eq" if equal_space else "rand"
+                plot.show() if self.show else plot.savefig(f"charts/{interpolation_method}/{file}-{random}-{smpl}-samples.png")
+                plot.close()
                 self.index += 1
 
     @staticmethod
     def plot(org_x, org_y, probes_x, probes_y, interpolated_x, interpolated_y, title, description):
-        plt.figure(figsize=(15, 9))
+        plt.figure(figsize=(11, 5))
         plt.plot(org_x, org_y, label="Oryginalny wykres")
-        plt.plot(probes_x, probes_y, 'o', markersize=12, label="Próbki", color="lime")
         plt.plot(interpolated_x, interpolated_y, label="Funkcja interpolacyjna")
-        plt.title(title, fontsize=25)
-        plt.legend(prop={'size': 16})
-        plt.figtext(0.5, 0.001, description, wrap=True, horizontalalignment='center', fontsize=18)
+        plt.plot(probes_x, probes_y, 'o', markersize=12, label="Próbki", color="lime")
+        plt.title(title, fontsize=20, **{'fontname':'Verdana'})
+        plt.legend(prop={'size': 13})
+        plt.xlabel(DISTANCE + '\n'+description, fontsize=13)
+        plt.ylabel(HEIGHT, fontsize=13)
+        plt.tight_layout()
+
+        mplcyberpunk.make_lines_glow()
         return plt
 
-    def get_plot_title_and_description(self, method_name, file, smpl):
+    def get_plot_title_and_description(self, method_name, file, smpl, equal):
         filename = re.sub(r"(\w)([A-Z])", r"\1 \2", file)
         title = f"{method_name} dla {filename}, ilość próbek = {smpl}"
-        description = f"wyk. {self.index} prezentuje przeprowadzenie interpolacji metodą Lagrange'a\n dla {smpl}" \
-                      f" próbek z pliku {file}.csv "
+        probes = "równo odległych" if equal else "losowo wybranych"
+        description = f"\nwyk. {self.index} prezentuje przeprowadzenie interpolacji metodą Lagrange'a\n dla {smpl} {probes} " \
+                      f"próbek z pliku {file}.csv "
         return description, title
